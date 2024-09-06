@@ -1,33 +1,31 @@
 use leptos::*;
-mod progress_bar;
-use progress_bar::ProgressBar;
+use leptos_router::*;
+mod progress;
+use progress::Progress;
+mod counter;
+use counter::Counter;
+mod interation;
+use interation::Iteration;
 
 #[component]
 fn App() -> impl IntoView {
-    let (x, set_x) = create_signal(0);
-
-    let double_count = move || x() * 2;
     view! {
-        <button on:click=move|_| {
-            set_x.update(|n| *n += 10)
-        }
-        // class:red=move || count() % 2 == 1
-        //When dashes and numbers or other characters exists in the class name, use this format
-        class=("button-20", move || x() % 2 == 1)
-                // and toggle individual CSS properties with `style:`
-                style:left=move || format!("{}px", x() + 100)
-                style:background-color=move || format!("rgb({}, {}, 100)", x(), 100)
-                style:max-width="400px"
-                // Set a CSS variable for stylesheet use
-                style=("--columns", x)
-        >
-            "Click me: "
-            {x}
-        </button>
-        <ProgressBar progress=x />
-        <br />
-        // add a second progress bar
-        <ProgressBar progress=Signal::derive(double_count) />
+        <Router>
+            <nav style="display:flex; gap: 8px;">
+                <a href="/">"Home"</a>
+                <a href="/progress">"Progress"</a>
+                <a href="/counter">"Counter"</a>
+                <a href="/iteration">"Iteration"</a>
+            </nav>
+            <main>
+                <Routes>
+                    <Route path="/" view=|| view! { <h1>Welcome to Leptos</h1> } />
+                    <Route path="/counter" view=Counter />
+                    <Route path="/progress" view=Progress />
+                    <Route path="/iteration" view=Iteration />
+                </Routes>
+            </main>
+        </Router>
     }
 }
 
